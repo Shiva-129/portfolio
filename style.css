@@ -1,0 +1,840 @@
+/* Base styles */
+html {
+    height: 100%;
+    /* Ensure html takes full height */
+    box-sizing: border-box;
+    /* Consistent box model */
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+    /* Make html the main scrollable container */
+    scroll-behavior: smooth;
+    /* Smooth scrolling for anchor links */
+    scroll-padding-top: 120px;
+    /* Increased offset for sticky navbar */
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    overflow: visible;
+    /* Ensure body allows scrolling */
+}
+
+/* Add animation keyframes */
+@keyframes slideUpFromBottom {
+    0% {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hidden by default */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+/* Visible when in view */
+.fade-in.visible {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+/* Navbar styles */
+.sticky-navbar-wrapper {
+    position: sticky;
+    /* Re-enabled sticky positioning */
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 10px 0 0 0;
+    /* Add top padding to create space above the navbar */
+    background-color: transparent;
+    backdrop-filter: none;
+    /* Remove blur from wrapper */
+    -webkit-backdrop-filter: none;
+    /* Remove webkit blur from wrapper */
+    animation: slideUpFromBottom 0.8s ease-out forwards;
+}
+
+nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgba(43, 43, 43, 0.4);
+    /* More transparent background */
+    padding: 15px 30px;
+    border-bottom: none;
+    border-radius: 10px;
+    max-width: 80%;
+    margin: 0 auto;
+    backdrop-filter: blur(10px);
+    /* Increased blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    /* For Safari compatibility */
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow for depth */
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f0f0f0;
+    user-select: none;
+    /* Prevent text selection */
+    -webkit-user-select: none;
+    /* For Safari */
+    -moz-user-select: none;
+    /* For Firefox */
+    -ms-user-select: none;
+    /* For IE/Edge */
+}
+
+.nav-links {
+    list-style: none;
+    margin: 0 0 0 auto;
+    padding: 0;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 20px;
+}
+
+.nav-links a {
+    color: #f0f0f0;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+    z-index: 1000;
+}
+
+.nav-links a:hover {
+    font-size: 19px;
+    color: #00ffff;
+    transform: translateY(-2px);
+    text-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+}
+
+/* Hero section styles */
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    scroll-margin-top: 70px;
+    /* Offset for sticky navbar */
+    animation: slideUpFromBottom 0.8s ease-out 0.3s forwards;
+    opacity: 0;
+    /* Start with opacity 0 */
+}
+
+.profile-pic {
+    width: 250px;
+    height: 250px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-right: 50px;
+    transition: transform 0.3s ease;
+    /* Smooth transition for scaling */
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+    /* Increase size by 10% on hover */
+}
+
+.bio-text h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.bio-text p {
+    font-size: 24px;
+    margin: 5px 0;
+}
+
+.bio-text p span {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.bio-text p .designer {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.bio-text p .designer:hover {
+    transform: translateY(-8px);
+    text-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    color: #00ffff;
+}
+
+.bio-text h1 span,
+.bio-text p span {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.bio-text h1 span:hover,
+.bio-text p span:hover {
+    transform: translateY(-8px);
+    text-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    color: #00ffff;
+}
+
+/* Remove the previous hover effects */
+.bio-text h1:hover,
+.bio-text p:hover {
+    transform: none;
+    text-shadow: none;
+}
+
+/* About me section styles */
+.about-me-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    scroll-margin-top: 70px;
+    animation: slideUpFromBottom 0.8s ease-out 0.6s forwards;
+    opacity: 0;
+}
+
+.about-me-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    /* Changed to white */
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.about-me-section p {
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    20% {
+        transform: translateY(-8px);
+    }
+
+    40% {
+        transform: translateY(0px);
+    }
+
+    60% {
+        transform: translateY(-4px);
+    }
+
+    80% {
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.about-me-section p strong {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    display: inline-block;
+    animation: float 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+.about-me-section p strong:hover {
+    text-shadow: 0 0 15px rgba(0, 255, 255, 0.9),
+        0 0 25px rgba(0, 255, 255, 0.7),
+        0 0 35px rgba(0, 255, 255, 0.5);
+    animation-play-state: paused;
+}
+
+/* Projects section styles */
+.projects-section {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 50px 20px;
+    scroll-margin-top: 70px;
+}
+
+.projects-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    display: inline-block;
+    padding-bottom: 5px;
+    position: relative;
+    animation: slideUpFromBottom 0.8s ease-out 0.9s forwards;
+    opacity: 0;
+}
+
+.project-card {
+    background-color: #1f1f1f;
+    border: 1px solid #2f2f2f;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.projects-section .project-card:nth-of-type(1) {
+    animation: slideUpFromBottom 0.8s ease-out 1.2s forwards;
+}
+
+.projects-section .project-card:nth-of-type(2) {
+    animation: slideUpFromBottom 0.8s ease-out 1.5s forwards;
+}
+
+.project-card:hover {
+    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.project-card h3 {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+.project-card p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    background-color: #383838;
+    color: #b0b0b0;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* Skills section styles */
+.skills-section {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 50px 20px;
+    scroll-margin-top: 70px;
+    /* Offset for sticky navbar */
+}
+
+.skills-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    /* Solid white underline */
+    text-decoration: none;
+    /* Ensure no default underline */
+    width: fit-content;
+    /* Make underline fit text width */
+    display: inline-block;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.skills-icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Center the icons horizontally */
+    gap: 80px;
+    /* Increased space between icons */
+    margin-top: 40px;
+}
+
+.skill-icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 100px;
+    /* Ensure container maintains its space */
+    height: 120px;
+    /* Ensure container maintains its space (adjust as needed for text) */
+    overflow: visible;
+    /* Allow content to extend beyond bounds */
+}
+
+.skill-icon-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    touch-action: none;
+    will-change: transform;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Add tooltip styles */
+.skill-icon-item::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: -30px;
+    /* Changed from bottom to top */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.skill-icon-item:hover::after {
+    opacity: 1;
+    visibility: visible;
+    top: -35px;
+    /* Changed from bottom to top */
+}
+
+.skill-icon-item img:active {
+    cursor: grabbing;
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 15px rgba(0, 149, 255, 0.9));
+}
+
+.skill-icon-item img:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 15px rgba(0, 149, 255, 0.9));
+}
+
+.skill-icon-item p {
+    font-size: 14px;
+    color: #ccc;
+    /* Lighter text color */
+    margin: 0;
+}
+
+/* Learning section styles */
+.learning-section {
+    max-width: 80%;
+    margin: 0 auto;
+    padding: 50px 20px;
+    scroll-margin-top: 70px;
+    /* Offset for sticky navbar */
+}
+
+.learning-section h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    /* Changed to white */
+    display: inline-block;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+.learning-section h2::after {
+    content: none;
+    /* Removed the dot */
+}
+
+.learning-item {
+    background-color: #1f1f1f;
+    border: 1px solid #2f2f2f;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.learning-item:hover {
+    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.learning-item img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.learning-item:hover img {
+    transform: scale(1.1);
+}
+
+.learning-item h3 {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+.learning-item p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.learning-item .learning-status {
+    text-align: left;
+    /* Move to left side */
+    margin-top: 20px;
+}
+
+.learning-item .learning-status-box {
+    background-color: #3e3e3e;
+    color: #f0f0f0;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Ensure the old button styles remain hidden */
+
+/* Main content styles */
+main {
+    min-height: calc(100vh - 50px);
+    /* Ensure main takes up enough height to enable full page scrolling */
+    overflow: visible;
+    /* Ensure main allows scrolling */
+}
+
+.learning-card {
+    background-color: #1f1f1f;
+    border: 1px solid #2f2f2f;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
+}
+
+.learning-card:hover {
+    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.learning-card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+.learning-card:hover img {
+    transform: scale(1.1);
+}
+
+.learning-card h3 {
+    font-size: 24px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+.learning-card p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+/* Media Queries for Responsive Design */
+@media screen and (max-width: 768px) {
+
+    /* Navbar styles for mobile */
+    nav {
+        max-width: 75%;
+        /* Increased gap by reducing from 85% to 75% for mobile */
+        padding: 10px 25px;
+        /* Increased horizontal padding for mobile */
+    }
+
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: rgba(43, 43, 43, 0.95);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0;
+    }
+
+    .hamburger-menu {
+        display: block;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+    .hamburger-menu span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #f0f0f0;
+        margin: 5px 0;
+        transition: all 0.3s ease;
+    }
+
+    /* Hero section styles for mobile */
+    .hero-section {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .profile-pic {
+        margin: 0 0 30px 0;
+        width: 200px;
+        height: 200px;
+    }
+
+    .bio-text h1 {
+        font-size: 32px;
+    }
+
+    .bio-text p {
+        font-size: 20px;
+    }
+
+    /* Adjust other sections for mobile */
+    .projects-section,
+    .skills-section,
+    .learning-section {
+        max-width: 95%;
+    }
+
+    .skills-icons-container {
+        gap: 40px;
+    }
+
+    .skill-icon-item {
+        width: 80px;
+        height: 100px;
+    }
+
+    .skill-icon-item img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Hide hamburger menu on desktop */
+.hamburger-menu {
+    display: none;
+}
+
+/* Hamburger Menu Styles */
+.hamburger-menu {
+    display: none;
+    cursor: pointer;
+    margin-left: auto;
+    padding: 5px;
+    z-index: 1001;
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #f0f0f0;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    border-radius: 3px;
+}
+
+.hamburger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
+@media screen and (max-width: 768px) {
+
+    /* Navbar styles for mobile */
+    nav {
+        max-width: 95%;
+        padding: 10px 15px;
+    }
+
+    .hamburger-menu {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: rgba(43, 43, 43, 0.95);
+        padding: 20px;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        z-index: 1000;
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 0;
+    }
+}
+
+/* Footer styles */
+footer {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+    padding: 60px 0 20px 0;
+    /* Adjusted padding to allow flex to manage space */
+    text-align: center;
+    border-top: 1px solid #333;
+    display: flex;
+    /* Make footer a flex container */
+    flex-direction: column;
+    /* Stack children vertically */
+    justify-content: space-between;
+    /* Distribute space between children */
+    min-height: 200px;
+    /* Give it a minimum height to spread content */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 100%;
+    /* Increased max-width further */
+    margin: 0 auto;
+    padding: 10px 20px;
+    gap: 800px;
+    /* Increased gap for more separation */
+}
+
+.footer-left .logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f0f0f0;
+}
+
+.footer-right p {
+    margin: 5px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.footer-right p i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.footer-bottom {
+    margin-top: auto;
+    /* Push to the bottom within the flex container */
+    font-size: 14px;
+    color: #ccc;
+}
+
+@media screen and (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .footer-right p {
+        justify-content: center;
+        /* Center align icons and text in mobile view */
+    }
+}
