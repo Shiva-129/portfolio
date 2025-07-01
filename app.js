@@ -139,3 +139,97 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
+// Golden Apple Projectile Animation
+const navbarLogo = document.getElementById('navbar-logo');
+
+console.log('navbarLogo:', navbarLogo);
+
+if (navbarLogo) {
+    navbarLogo.addEventListener('click', (event) => {
+        console.log('Navbar logo clicked!');
+        // Button press animation for logo
+        navbarLogo.style.transition = 'transform 0.12s cubic-bezier(0.4,0,0.2,1)';
+        navbarLogo.style.transform = 'scale(0.85)';
+        setTimeout(() => {
+            navbarLogo.style.transform = 'scale(1.08)';
+            setTimeout(() => {
+                navbarLogo.style.transform = 'scale(1)';
+            }, 120);
+        }, 100);
+
+        // Get logo position in viewport
+        const logoRect = navbarLogo.getBoundingClientRect();
+        const scrollY = window.scrollY || window.pageYOffset;
+        const scrollX = window.scrollX || window.pageXOffset;
+        const startX = logoRect.left + logoRect.width / 2 + scrollX;
+        const startY = logoRect.bottom + scrollY;
+        const appleSize = 32;
+        const pageHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+        const endY = pageHeight - 40;
+        const duration = 1200; // ms
+
+        // Determine click position relative to logo
+        const clickX = event.clientX - logoRect.left;
+        const logoWidth = logoRect.width;
+        let directions = [];
+        if (clickX < logoWidth / 3) {
+            // Left third: all apples go left
+            directions = [-1, -1, -1, -1, -1];
+        } else if (clickX > logoWidth * 2 / 3) {
+            // Right third: all apples go right
+            directions = [1, 1, 1, 1, 1];
+        } else {
+            // Center third: half left, half right
+            directions = [-1, -1, 1, 1, Math.random() < 0.5 ? -1 : 1];
+        }
+
+        function launchApple(delay, arcVariation, direction) {
+            setTimeout(() => {
+                const horizontalDistance = window.innerWidth * (0.25 + Math.random() * 0.15); // 25% to 40% of screen width
+                const endX = startX + direction * horizontalDistance;
+                const height = window.innerHeight * (0.4 + arcVariation); // vary arc height
+                const midX = (startX + endX) / 2;
+                const peakY = Math.min(startY, endY) - height * 1.4;
+                const start = performance.now();
+
+                const apple = document.createElement('img');
+                apple.src = 'images/Enchanted_Golden_Apple.webp';
+                apple.alt = 'Golden Apple';
+                apple.id = 'projectile-golden-apple';
+                apple.style.position = 'absolute';
+                apple.style.left = (startX - appleSize / 2) + 'px';
+                apple.style.top = (startY - appleSize / 2) + 'px';
+                apple.style.width = appleSize + 'px';
+                apple.style.height = appleSize + 'px';
+                apple.style.zIndex = '5';
+                apple.style.pointerEvents = 'none';
+                document.body.appendChild(apple);
+
+                function animateProjectile(now) {
+                    const elapsed = now - start;
+                    const t = Math.min(elapsed / duration, 1);
+                    const bx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * endX;
+                    const by = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * peakY + t * t * endY;
+                    apple.style.left = (bx - appleSize / 2) + 'px';
+                    apple.style.top = (by - appleSize / 2) + 'px';
+                    apple.style.opacity = `${1 - 0.8 * t}`;
+                    if (t > 0.1) apple.style.zIndex = '3000';
+                    if (t < 1) {
+                        requestAnimationFrame(animateProjectile);
+                    } else {
+                        setTimeout(() => {
+                            if (apple.parentNode) apple.parentNode.removeChild(apple);
+                        }, 300);
+                    }
+                }
+                requestAnimationFrame(animateProjectile);
+            }, delay);
+        }
+
+        // Launch 5 apples with staggered delays and arc variations, using chosen directions
+        for (let i = 0; i < 5; i++) {
+            launchApple(i * 120, Math.random() * 0.15 - 0.05, directions[i]);
+        }
+    });
+}
