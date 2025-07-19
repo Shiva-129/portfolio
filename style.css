@@ -344,6 +344,10 @@ nav {
     animation: slideUpFromBottom 0.8s ease-out 1.5s forwards;
 }
 
+.projects-section .project-card:nth-of-type(3) {
+    animation: slideUpFromBottom 0.8s ease-out 1.8s forwards;
+}
+
 .project-card:hover {
     box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transform: translateY(-5px);
