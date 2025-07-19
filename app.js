@@ -93,6 +93,48 @@ skillIcons.forEach(icon => {
     }
 });
 
+// Modern rotating text animation for developer/designer toggle
+function initTextAnimation() {
+    const designerElement = document.querySelector('.designer');
+    if (!designerElement) return;
+
+    const words = ['DEVELOPER', 'DESIGNER'];
+    let currentIndex = 0;
+
+    function changeText() {
+        // Modern upward rotation exit
+        designerElement.style.transform = 'translateY(-30px) rotateX(90deg) scale(0.8)';
+        designerElement.style.opacity = '0';
+
+        setTimeout(() => {
+            // Change text
+            currentIndex = (currentIndex + 1) % words.length;
+            designerElement.textContent = words[currentIndex];
+
+            // Reset position for entrance (from below)
+            designerElement.style.transform = 'translateY(30px) rotateX(-90deg) scale(0.8)';
+
+            // Small delay for smooth transition
+            setTimeout(() => {
+                // Modern upward rotation entrance
+                designerElement.style.transform = 'translateY(0) rotateX(0deg) scale(1)';
+                designerElement.style.opacity = '1';
+            }, 50);
+        }, 400);
+    }
+
+    // Set modern transition properties with smooth easing
+    designerElement.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    designerElement.style.transformStyle = 'preserve-3d';
+    designerElement.style.perspective = '1000px';
+
+    // Start the animation loop
+    setInterval(changeText, 5000);
+}
+
+// Initialize text animation when DOM is loaded
+document.addEventListener('DOMContentLoaded', initTextAnimation);
+
 // Mobile menu functionality
 const hamburgerMenu = document.querySelector('.hamburger-menu');
 const navLinks = document.querySelector('.nav-links');
@@ -140,7 +182,7 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// Golden Apple Projectile Animation
+// Falling Letters Animation
 const navbarLogo = document.getElementById('navbar-logo');
 
 console.log('navbarLogo:', navbarLogo);
@@ -162,74 +204,78 @@ if (navbarLogo) {
         const logoRect = navbarLogo.getBoundingClientRect();
         const scrollY = window.scrollY || window.pageYOffset;
         const scrollX = window.scrollX || window.pageXOffset;
-        const startX = logoRect.left + logoRect.width / 2 + scrollX;
-        const startY = logoRect.bottom + scrollY;
-        const appleSize = 32;
-        const pageHeight = Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
-        const endY = pageHeight - 40;
-        const duration = 1200; // ms
+        const startX = logoRect.left + scrollX;
+        const startY = logoRect.top + scrollY;
 
-        // Determine click position relative to logo
-        const clickX = event.clientX - logoRect.left;
-        const logoWidth = logoRect.width;
-        let directions = [];
-        if (clickX < logoWidth / 3) {
-            // Left third: all apples go left
-            directions = [-1, -1, -1, -1, -1];
-        } else if (clickX > logoWidth * 2 / 3) {
-            // Right third: all apples go right
-            directions = [1, 1, 1, 1, 1];
-        } else {
-            // Center third: half left, half right
-            directions = [-1, -1, 1, 1, Math.random() < 0.5 ? -1 : 1];
-        }
+        // Create falling letters
+        const logoText = 'SHOUKO';
 
-        function launchApple(delay, arcVariation, direction) {
-            setTimeout(() => {
-                const horizontalDistance = window.innerWidth * (0.25 + Math.random() * 0.15); // 25% to 40% of screen width
-                const endX = startX + direction * horizontalDistance;
-                const height = window.innerHeight * (0.4 + arcVariation); // vary arc height
-                const midX = (startX + endX) / 2;
-                const peakY = Math.min(startY, endY) - height * 1.4;
-                const start = performance.now();
+        // Define subtle weight differences for natural variation
+        const letterWeights = [1.1, 0.9, 1.0, 0.95, 1.05, 1.0]; // S, H, O, U, K, O
 
-                const apple = document.createElement('img');
-                apple.src = 'images/Enchanted_Golden_Apple.webp';
-                apple.alt = 'Golden Apple';
-                apple.id = 'projectile-golden-apple';
-                apple.style.position = 'absolute';
-                apple.style.left = (startX - appleSize / 2) + 'px';
-                apple.style.top = (startY - appleSize / 2) + 'px';
-                apple.style.width = appleSize + 'px';
-                apple.style.height = appleSize + 'px';
-                apple.style.zIndex = '5';
-                apple.style.pointerEvents = 'none';
-                document.body.appendChild(apple);
+        function createFallingLetter(letter, index) {
+            const letterElement = document.createElement('div');
+            letterElement.textContent = letter;
+            letterElement.style.position = 'absolute';
+            letterElement.style.left = (startX + (index * 20)) + 'px';
+            letterElement.style.top = startY + 'px';
+            letterElement.style.fontSize = '24px';
+            letterElement.style.fontWeight = '700';
+            letterElement.style.color = '#f0f0f0';
+            letterElement.style.zIndex = '3000';
+            letterElement.style.pointerEvents = 'none';
+            letterElement.style.textShadow = '0 0 8px rgba(240, 240, 240, 0.4)';
+            letterElement.style.userSelect = 'none';
 
-                function animateProjectile(now) {
-                    const elapsed = now - start;
-                    const t = Math.min(elapsed / duration, 1);
-                    const bx = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * midX + t * t * endX;
-                    const by = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * peakY + t * t * endY;
-                    apple.style.left = (bx - appleSize / 2) + 'px';
-                    apple.style.top = (by - appleSize / 2) + 'px';
-                    apple.style.opacity = `${1 - 0.8 * t}`;
-                    if (t > 0.1) apple.style.zIndex = '3000';
-                    if (t < 1) {
-                        requestAnimationFrame(animateProjectile);
-                    } else {
-                        setTimeout(() => {
-                            if (apple.parentNode) apple.parentNode.removeChild(apple);
-                        }, 300);
-                    }
+            document.body.appendChild(letterElement);
+
+            // Get letter weight for subtle speed variation
+            const weight = letterWeights[index];
+
+            // Clean animation parameters
+            const fallDistance = window.innerHeight - startY + 50;
+            const baseDuration = 3500; // Slower, more graceful fall
+            const fallDuration = baseDuration / weight;
+            const horizontalDrift = (index - 2.5) * 15; // Subtle spread from center
+            const rotationAmount = (index % 2 === 0 ? 1 : -1) * 180; // Alternating rotation
+
+            const startTime = performance.now();
+
+            function animateFall(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / fallDuration, 1);
+
+                // Gentle easing for graceful fall
+                const easing = progress * progress;
+
+                const currentY = startY + (fallDistance * easing);
+                const currentX = startX + (index * 20) + (horizontalDrift * progress * 0.5);
+                const currentRotation = rotationAmount * progress * 0.5;
+                const currentOpacity = Math.max(0.1, 1 - (progress * 0.8));
+
+                letterElement.style.left = currentX + 'px';
+                letterElement.style.top = currentY + 'px';
+                letterElement.style.transform = `rotate(${currentRotation}deg)`;
+                letterElement.style.opacity = currentOpacity;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateFall);
+                } else {
+                    // Clean removal
+                    setTimeout(() => {
+                        if (letterElement.parentNode) {
+                            letterElement.parentNode.removeChild(letterElement);
+                        }
+                    }, 200);
                 }
-                requestAnimationFrame(animateProjectile);
-            }, delay);
+            }
+
+            requestAnimationFrame(animateFall);
         }
 
-        // Launch 5 apples with staggered delays and arc variations, using chosen directions
-        for (let i = 0; i < 5; i++) {
-            launchApple(i * 120, Math.random() * 0.15 - 0.05, directions[i]);
+        // Create all falling letters simultaneously
+        for (let i = 0; i < logoText.length; i++) {
+            createFallingLetter(logoText[i], i);
         }
     });
 }

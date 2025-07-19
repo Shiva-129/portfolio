@@ -12,6 +12,9 @@ html {
     /* Smooth scrolling for anchor links */
     scroll-padding-top: 120px;
     /* Increased offset for sticky navbar */
+    -webkit-text-size-adjust: 100%;
+    /* Prevent text scaling on mobile */
+    -ms-text-size-adjust: 100%;
 }
 
 body {
@@ -22,6 +25,9 @@ body {
     color: #f0f0f0;
     overflow: visible;
     /* Ensure body allows scrolling */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Better font rendering on mobile */
 }
 
 /* Add animation keyframes */
@@ -165,16 +171,21 @@ nav {
 .profile-pic {
     width: 250px;
     height: 250px;
-    background-color: #ccc;
+    background-image: url('images/shouko.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: transparent;
     border-radius: 50%;
     margin-right: 50px;
-    transition: transform 0.3s ease;
-    /* Smooth transition for scaling */
+    transition: all 0.3s ease;
+    /* Smooth transition for scaling and image change */
 }
 
 .profile-pic:hover {
-    transform: scale(1.1);
-    /* Increase size by 10% on hover */
+    background-image: url('images/shouko-1.png');
+    transform: scale(1.05);
+    /* Slight scale increase with image change for "coming up" effect */
 }
 
 .bio-text h1 {
@@ -191,6 +202,17 @@ nav {
     display: inline-block;
     transition: all 0.3s ease;
 }
+
+/* Modern 3D rotating text animation */
+.designer {
+    display: inline-block;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    font-weight: bold;
+    position: relative;
+}
+
+
 
 .bio-text p .designer {
     display: inline-block;
@@ -253,29 +275,18 @@ nav {
     margin-bottom: 10px;
 }
 
-@keyframes float {
+@keyframes gentleGlow {
     0% {
-        transform: translateY(0px);
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
     }
 
-    20% {
-        transform: translateY(-8px);
-    }
-
-    40% {
-        transform: translateY(0px);
-    }
-
-    60% {
-        transform: translateY(-4px);
-    }
-
-    80% {
-        transform: translateY(0px);
+    50% {
+        text-shadow: 0 0 15px rgba(0, 255, 255, 0.6),
+                     0 0 20px rgba(0, 255, 255, 0.4);
     }
 
     100% {
-        transform: translateY(0px);
+        text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
     }
 }
 
@@ -283,17 +294,17 @@ nav {
     font-family: 'Poppins', sans-serif;
     font-weight: 600;
     color: #00ffff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-    transition: all 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.2);
+    transition: all 0.4s ease;
     display: inline-block;
-    animation: float 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+    animation: gentleGlow 3s ease-in-out infinite;
 }
 
 .about-me-section p strong:hover {
-    text-shadow: 0 0 15px rgba(0, 255, 255, 0.9),
-        0 0 25px rgba(0, 255, 255, 0.7),
-        0 0 35px rgba(0, 255, 255, 0.5);
-    animation-play-state: paused;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.9),
+        0 0 30px rgba(0, 255, 255, 0.7),
+        0 0 40px rgba(0, 255, 255, 0.5);
+    transform: scale(1.02);
 }
 
 /* Projects section styles */
@@ -334,9 +345,7 @@ nav {
 }
 
 .project-card:hover {
-    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
-        0 0 25px rgba(0, 149, 255, 0.7),
-        0 0 35px rgba(0, 149, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transform: translateY(-5px);
 }
 
@@ -511,9 +520,7 @@ nav {
 }
 
 .learning-item:hover {
-    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
-        0 0 25px rgba(0, 149, 255, 0.7),
-        0 0 35px rgba(0, 149, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transform: translateY(-5px);
 }
 
@@ -580,9 +587,7 @@ main {
 }
 
 .learning-card:hover {
-    box-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
-        0 0 25px rgba(0, 149, 255, 0.7),
-        0 0 35px rgba(0, 149, 255, 0.5);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     transform: translateY(-5px);
 }
 
@@ -611,28 +616,77 @@ main {
     margin-bottom: 15px;
 }
 
-/* Media Queries for Responsive Design */
+/* Enhanced Responsive Design */
+
+/* Tablet styles (768px - 1024px) */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+    nav {
+        max-width: 85%;
+        padding: 12px 25px;
+    }
+
+    .hero-section {
+        padding: 60px 20px;
+    }
+
+    .profile-pic {
+        width: 220px;
+        height: 220px;
+        margin-right: 40px;
+    }
+
+    .bio-text h1 {
+        font-size: 36px;
+    }
+
+    .bio-text p {
+        font-size: 22px;
+    }
+
+    .projects-section,
+    .skills-section,
+    .learning-section,
+    .about-me-section {
+        max-width: 90%;
+    }
+
+    .skills-icons-container {
+        gap: 50px;
+    }
+}
+
+/* Mobile styles (max-width: 768px) */
 @media screen and (max-width: 768px) {
+    /* Base mobile adjustments */
+    html {
+        scroll-padding-top: 80px;
+    }
 
     /* Navbar styles for mobile */
     nav {
-        max-width: 75%;
-        /* Increased gap by reducing from 85% to 75% for mobile */
-        padding: 10px 25px;
-        /* Increased horizontal padding for mobile */
+        max-width: 95%;
+        padding: 10px 15px;
+        margin: 0 10px;
+    }
+
+    .logo {
+        font-size: 20px;
     }
 
     .nav-links {
         display: none;
         position: fixed;
-        top: 70px;
+        top: 60px;
         left: 0;
         width: 100%;
-        background-color: rgba(43, 43, 43, 0.95);
+        background-color: rgba(43, 43, 43, 0.98);
+        backdrop-filter: blur(15px);
         padding: 20px;
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 25px;
+        z-index: 1001;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
     .nav-links.active {
@@ -641,12 +695,38 @@ main {
 
     .nav-links li {
         margin: 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px 20px;
+        border-radius: 8px;
+        background-color: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+        min-height: 44px; /* Minimum touch target size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-links a:hover {
+        background-color: rgba(0, 255, 255, 0.1);
+        transform: translateY(-2px);
     }
 
     .hamburger-menu {
         display: block;
         cursor: pointer;
         margin-left: auto;
+        padding: 8px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .hamburger-menu:hover {
+        background-color: rgba(255, 255, 255, 0.1);
     }
 
     .hamburger-menu span {
@@ -654,50 +734,153 @@ main {
         width: 25px;
         height: 3px;
         background-color: #f0f0f0;
-        margin: 5px 0;
+        margin: 4px 0;
         transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    /* Hamburger animation */
+    .hamburger-menu.active span:nth-child(1) {
+        transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .hamburger-menu.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger-menu.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
     }
 
     /* Hero section styles for mobile */
     .hero-section {
         flex-direction: column;
         text-align: center;
-        padding: 40px 20px;
+        padding: 30px 15px;
+        min-height: auto;
     }
 
     .profile-pic {
-        margin: 0 0 30px 0;
-        width: 200px;
-        height: 200px;
+        margin: 0 0 25px 0;
+        width: 180px;
+        height: 180px;
     }
 
     .bio-text h1 {
-        font-size: 32px;
+        font-size: 28px;
+        margin-bottom: 15px;
+        line-height: 1.2;
     }
 
     .bio-text p {
-        font-size: 20px;
+        font-size: 18px;
+        margin: 8px 0;
+        line-height: 1.4;
     }
 
-    /* Adjust other sections for mobile */
+    /* Section adjustments for mobile */
+    .about-me-section,
     .projects-section,
     .skills-section,
     .learning-section {
         max-width: 95%;
+        padding: 40px 15px;
+        margin: 0 auto;
     }
 
+    .about-me-section h2,
+    .projects-section h2,
+    .skills-section h2,
+    .learning-section h2 {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
+
+    .about-me-section p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    /* Project cards mobile */
+    .project-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .project-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .project-card p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .tags {
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    /* Skills section mobile */
     .skills-icons-container {
-        gap: 40px;
+        gap: 30px;
+        padding: 20px 10px;
+        justify-content: center;
     }
 
     .skill-icon-item {
-        width: 80px;
-        height: 100px;
+        width: 70px;
+        height: 90px;
     }
 
     .skill-icon-item img {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
+    }
+
+    .skill-icon-item p {
+        font-size: 12px;
+        margin-top: 8px;
+    }
+
+    /* Learning section mobile */
+    .learning-item,
+    .learning-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .learning-item h3,
+    .learning-card h3 {
+        font-size: 20px;
+        margin-bottom: 12px;
+    }
+
+    .learning-item p,
+    .learning-card p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .learning-item img,
+    .learning-card img {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 12px;
+    }
+
+    .learning-status-box {
+        padding: 8px 16px;
+        font-size: 14px;
     }
 }
 
@@ -706,71 +889,7 @@ main {
     display: none;
 }
 
-/* Hamburger Menu Styles */
-.hamburger-menu {
-    display: none;
-    cursor: pointer;
-    margin-left: auto;
-    padding: 5px;
-    z-index: 1001;
-}
 
-.hamburger-menu span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background-color: #f0f0f0;
-    margin: 5px 0;
-    transition: all 0.3s ease;
-    border-radius: 3px;
-}
-
-.hamburger-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.hamburger-menu.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.hamburger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
-}
-
-@media screen and (max-width: 768px) {
-
-    /* Navbar styles for mobile */
-    nav {
-        max-width: 95%;
-        padding: 10px 15px;
-    }
-
-    .hamburger-menu {
-        display: block;
-    }
-
-    .nav-links {
-        display: none;
-        position: fixed;
-        top: 70px;
-        left: 0;
-        width: 100%;
-        background-color: rgba(43, 43, 43, 0.95);
-        padding: 20px;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        z-index: 1000;
-    }
-
-    .nav-links.active {
-        display: flex;
-    }
-
-    .nav-links li {
-        margin: 0;
-    }
-}
 
 /* Footer styles */
 footer {
@@ -828,15 +947,179 @@ footer {
     color: #ccc;
 }
 
+/* Small mobile styles (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    .sticky-navbar-wrapper {
+        padding: 5px 0 0 0;
+    }
+
+    nav {
+        max-width: 98%;
+        padding: 8px 12px;
+        margin: 0 5px;
+        border-radius: 8px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .hero-section {
+        padding: 20px 10px;
+    }
+
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
+
+    .bio-text h1 {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+
+    .bio-text p {
+        font-size: 16px;
+        margin: 6px 0;
+    }
+
+    .about-me-section,
+    .projects-section,
+    .skills-section,
+    .learning-section {
+        padding: 30px 10px;
+    }
+
+    .about-me-section h2,
+    .projects-section h2,
+    .skills-section h2,
+    .learning-section h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+
+    .about-me-section p {
+        font-size: 15px;
+        margin-bottom: 12px;
+    }
+
+    .project-card,
+    .learning-item,
+    .learning-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .skills-icons-container {
+        gap: 20px;
+        padding: 15px 5px;
+    }
+
+    .skill-icon-item {
+        width: 60px;
+        height: 80px;
+    }
+
+    .skill-icon-item img {
+        width: 45px;
+        height: 45px;
+    }
+
+    .skill-icon-item p {
+        font-size: 11px;
+        margin-top: 6px;
+    }
+
+    .footer-content {
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .footer-left .logo {
+        font-size: 20px;
+    }
+
+    .footer-right p {
+        font-size: 14px;
+    }
+
+    .footer-right p i {
+        font-size: 16px;
+        margin-right: 6px;
+    }
+}
+
+/* Footer responsive styles */
 @media screen and (max-width: 768px) {
+    footer {
+        padding: 40px 0 15px 0;
+        min-height: 150px;
+    }
+
     .footer-content {
         flex-direction: column;
         text-align: center;
-        gap: 15px;
+        gap: 20px;
+        max-width: 95%;
+        padding: 15px 20px;
     }
 
     .footer-right p {
         justify-content: center;
-        /* Center align icons and text in mobile view */
+        margin: 8px 0;
+    }
+
+    .footer-bottom {
+        font-size: 13px;
+        margin-top: 20px;
+    }
+}
+
+/* Very small screens (max-width: 320px) */
+@media screen and (max-width: 320px) {
+    .bio-text h1 {
+        font-size: 20px;
+    }
+
+    .bio-text p {
+        font-size: 14px;
+    }
+
+    .about-me-section h2,
+    .projects-section h2,
+    .skills-section h2,
+    .learning-section h2 {
+        font-size: 20px;
+    }
+
+    .about-me-section p {
+        font-size: 14px;
+    }
+
+    .project-card h3,
+    .learning-item h3,
+    .learning-card h3 {
+        font-size: 18px;
+    }
+
+    .project-card p,
+    .learning-item p,
+    .learning-card p {
+        font-size: 13px;
+    }
+
+    .skills-icons-container {
+        gap: 15px;
+    }
+
+    .skill-icon-item {
+        width: 55px;
+        height: 75px;
+    }
+
+    .skill-icon-item img {
+        width: 40px;
+        height: 40px;
     }
 }
