@@ -1,3 +1,170 @@
+/* Typing Animation Overlay */
+.typing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+}
+
+.typing-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Hide main content during typing animation */
+body.typing-active .sticky-navbar-wrapper,
+body.typing-active main,
+body.typing-active footer,
+body.typing-active .bg-animations {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Show navbar during transition for smooth movement */
+body.typing-complete .sticky-navbar-wrapper {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease-in;
+}
+
+body.typing-complete main,
+body.typing-complete footer,
+body.typing-complete .bg-animations {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.6s ease-in 0.6s; /* Delay for main content */
+}
+
+.typing-container {
+    text-align: center;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.text-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.typing-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    transform-origin: center center;
+    z-index: 10001;
+}
+
+.typing-text::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    transform: translateX(0);
+    transition: transform 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.typing-text.reveal::before {
+    transform: translateX(100%);
+}
+
+.typing-cursor {
+    position: absolute;
+    font-family: 'Poppins', sans-serif;
+    font-size: 4rem;
+    font-weight: 600;
+    color: #00ffff;
+    height: 4rem;
+    width: 3px;
+    background: #00ffff;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left 2.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Responsive sliding reveal animation */
+@media screen and (max-width: 1024px) {
+    .typing-text {
+        font-size: 3.5rem;
+        letter-spacing: 0.08em;
+    }
+
+    .typing-cursor {
+        height: 3.5rem;
+    }
+
+    .typing-container {
+        padding: 0 30px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .typing-text {
+        font-size: 3rem;
+        letter-spacing: 0.06em;
+    }
+
+    .typing-cursor {
+        height: 3rem;
+    }
+
+    .typing-container {
+        padding: 0 25px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .typing-text {
+        font-size: 2.2rem;
+        letter-spacing: 0.05em;
+    }
+
+    .typing-cursor {
+        height: 2.2rem;
+    }
+
+    .typing-container {
+        padding: 0 20px;
+        max-width: 90%;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .typing-text {
+        font-size: 1.8rem;
+        letter-spacing: 0.04em;
+    }
+
+    .typing-cursor {
+        height: 1.8rem;
+    }
+
+    .typing-container {
+        padding: 0 15px;
+        max-width: 95%;
+    }
+}
+
 /* Base styles */
 html {
     height: 100%;
@@ -15,6 +182,8 @@ html {
     -webkit-text-size-adjust: 100%;
     /* Prevent text scaling on mobile */
     -ms-text-size-adjust: 100%;
+    /* Prevent scroll restoration */
+    overscroll-behavior: none;
 }
 
 body {
@@ -28,6 +197,186 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     /* Better font rendering on mobile */
+    position: relative;
+}
+
+/* Animated Background Elements */
+.bg-animations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+/* 3D Wireframe Spheres - Home Section Only */
+#hero-section .threejs-sphere {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    pointer-events: none;
+    z-index: 1;
+    /* Add subtle glow around the entire sphere container */
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.1));
+    /* Smooth transitions for entrance animations */
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+#hero-section .threejs-sphere canvas {
+    width: 100% !important;
+    height: 100% !important;
+    /* Additional glow effect */
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.08));
+    /* Smooth rendering */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+}
+
+#hero-section #sphere-1 {
+    top: 8%;
+    left: 5%;
+}
+
+#hero-section #sphere-2 {
+    bottom: 10%;
+    right: 6%;
+    width: 180px;
+    height: 180px;
+}
+
+/* Loading Spinner - 8 bar asterisk pattern */
+.loading-spinner {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    animation: rotateSpinner 2s linear infinite;
+}
+
+.loading-spinner::before,
+.loading-spinner::after,
+.loading-spinner .bar-1,
+.loading-spinner .bar-2,
+.loading-spinner .bar-3,
+.loading-spinner .bar-4,
+.loading-spinner .bar-5,
+.loading-spinner .bar-6 {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 20px; /* Slightly bigger bars */
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 3px;
+    transform-origin: center center;
+    box-shadow:
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.loading-spinner::before {
+    transform: translate(-50%, -50%) rotate(0deg) translateY(-20px);
+}
+
+.loading-spinner::after {
+    transform: translate(-50%, -50%) rotate(45deg) translateY(-20px);
+}
+
+.loading-spinner .bar-1 {
+    transform: translate(-50%, -50%) rotate(90deg) translateY(-20px);
+}
+
+.loading-spinner .bar-2 {
+    transform: translate(-50%, -50%) rotate(135deg) translateY(-20px);
+}
+
+.loading-spinner .bar-3 {
+    transform: translate(-50%, -50%) rotate(180deg) translateY(-20px);
+}
+
+.loading-spinner .bar-4 {
+    transform: translate(-50%, -50%) rotate(225deg) translateY(-20px);
+}
+
+.loading-spinner .bar-5 {
+    transform: translate(-50%, -50%) rotate(270deg) translateY(-20px);
+}
+
+.loading-spinner .bar-6 {
+    transform: translate(-50%, -50%) rotate(315deg) translateY(-20px);
+}
+
+.spinner-1 {
+    display: none; /* Hide the left top spinner */
+}
+
+/* Spinner only in hero section */
+#hero-section .spinner-2 {
+    position: absolute;
+    top: 5%;
+    right: 15%;
+    animation-duration: 5s;
+    animation-direction: reverse;
+    z-index: 1; /* Above background but below content */
+}
+
+
+
+/* Keyframe Animations */
+@keyframes rotateSphere {
+    0% {
+        transform: rotate(0deg) rotateY(0deg);
+    }
+    100% {
+        transform: rotate(360deg) rotateY(360deg);
+    }
+}
+
+@keyframes rotateSpinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Slide in animations for hero section */
+@keyframes slideInFromLeft {
+    0% {
+        transform: translateX(-100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromRight {
+    0% {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes pulseDots {
+    0%, 100% {
+        opacity: 0.1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.3;
+        transform: scale(1.1);
+    }
 }
 
 /* Add animation keyframes */
@@ -118,6 +467,11 @@ nav {
     /* For Firefox */
     -ms-user-select: none;
     /* For IE/Edge */
+    /* Prevent dragging */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
 }
 
 .nav-links {
@@ -142,6 +496,16 @@ nav {
     display: inline-block;
     position: relative;
     z-index: 1000;
+    /* Prevent dragging */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .nav-links a:hover {
@@ -173,19 +537,43 @@ nav {
     height: 250px;
     background-image: url('images/shouko.png');
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
-    background-color: transparent;
+    background-color: #1a1a1a;
     border-radius: 50%;
     margin-right: 50px;
-    transition: all 0.3s ease;
-    /* Smooth transition for scaling and image change */
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    position: relative;
+    /* Slide in from left animation - delayed after Shouko animation */
+    opacity: 0;
+    animation: slideInFromLeft 1s ease-out 3.5s forwards;
 }
 
-.profile-pic:hover {
+.profile-pic::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-image: url('images/shouko-1.png');
-    transform: scale(1.05);
-    /* Slight scale increase with image change for "coming up" effect */
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-pic:hover::before {
+    opacity: 1;
+}
+
+/* Bio text container - slide in from right - delayed after Shouko animation */
+.bio-text {
+    opacity: 0;
+    animation: slideInFromRight 1s ease-out 4.0s forwards;
 }
 
 .bio-text h1 {
@@ -637,6 +1025,8 @@ main {
         width: 220px;
         height: 220px;
         margin-right: 40px;
+        /* Responsive animation timing */
+        animation: slideInFromLeft 1s ease-out 3.2s forwards;
     }
 
     .bio-text h1 {
@@ -645,6 +1035,21 @@ main {
 
     .bio-text p {
         font-size: 22px;
+    }
+
+    /* Adjust animations for tablet view */
+    #hero-section #sphere-2 {
+        width: 150px;
+        height: 150px;
+        bottom: 8%;
+        right: 4%;
+    }
+
+    #hero-section .spinner-2 {
+        width: 80px;
+        height: 80px;
+        top: 4%;
+        right: 12%;
     }
 
     .projects-section,
@@ -768,6 +1173,34 @@ main {
         margin: 0 0 25px 0;
         width: 180px;
         height: 180px;
+        /* Faster animation timing for mobile */
+        animation: slideInFromLeft 0.8s ease-out 2.8s forwards;
+    }
+
+    .bio-text {
+        /* Faster animation timing for mobile */
+        animation: slideInFromRight 0.8s ease-out 3.2s forwards;
+    }
+
+    /* Hide bottom sphere in mobile view */
+    #hero-section #sphere-2 {
+        display: none;
+    }
+
+    /* Adjust top sphere position for mobile */
+    #hero-section #sphere-1 {
+        top: 15%;
+        left: 3%;
+        width: 120px;
+        height: 120px;
+    }
+
+    /* Adjust spinner position for mobile */
+    #hero-section .spinner-2 {
+        top: 3%;
+        right: 8%;
+        width: 60px;
+        height: 60px;
     }
 
     .bio-text h1 {
@@ -976,6 +1409,28 @@ footer {
         width: 150px;
         height: 150px;
         margin-bottom: 20px;
+        /* Even faster timing for small screens */
+        animation: slideInFromLeft 0.7s ease-out 2.5s forwards;
+    }
+
+    .bio-text {
+        /* Even faster timing for small screens */
+        animation: slideInFromRight 0.7s ease-out 2.8s forwards;
+    }
+
+    /* Further adjust animations for very small screens */
+    #hero-section #sphere-1 {
+        width: 100px;
+        height: 100px;
+        top: 3%;
+        left: 2%;
+    }
+
+    #hero-section .spinner-2 {
+        width: 50px;
+        height: 50px;
+        top: 2%;
+        right: 5%;
     }
 
     .bio-text h1 {

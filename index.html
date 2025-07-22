@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <meta name="language" content="en">
+    <meta http-equiv="Content-Language" content="en">
     <title>Shouko</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Poppins:wght@600&display=swap"
@@ -12,10 +15,25 @@
     <link rel="icon" type="image/png" href="images/imagesnishimiya shouko ; a silent voice.png">
 </head>
 
-<body>
+<body translate="no" class="notranslate">
+    <!-- Typing Animation Overlay -->
+    <div id="typing-overlay" class="typing-overlay">
+        <div class="typing-container">
+            <div class="text-wrapper">
+                <h1 id="typing-text" class="typing-text">Shouko</h1>
+                <div id="typing-cursor" class="typing-cursor"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated Background Elements -->
+    <div class="bg-animations">
+        <!-- All animations moved to hero section -->
+    </div>
+
     <div class="sticky-navbar-wrapper">
         <nav>
-            <div class="logo" id="navbar-logo">Shouko
+            <div class="logo" id="navbar-logo" style="opacity: 0;">Shouko
                 <div id="golden-apple-container" style="position: absolute; left: 0; top: 100%; width: 100%; pointer-events: none;"></div>
             </div>
             <ul class="nav-links">
@@ -35,6 +53,20 @@
 
     <main>
         <section class="hero-section" id="hero-section">
+            <!-- All animations for Home Section Only -->
+            <!-- 3D Wireframe Spheres -->
+            <div class="threejs-sphere" id="sphere-1"></div>
+            <div class="threejs-sphere" id="sphere-2"></div>
+
+            <!-- Loading Spinner -->
+            <div class="loading-spinner spinner-2">
+                <div class="bar-1"></div>
+                <div class="bar-2"></div>
+                <div class="bar-3"></div>
+                <div class="bar-4"></div>
+                <div class="bar-5"></div>
+                <div class="bar-6"></div>
+            </div>
             <div class="profile-pic"></div>
             <div class="bio-text">
                 <h1>
@@ -159,6 +191,288 @@
     </footer>
 
     <script src="app.js"></script>
+
+    <!-- Three.js CDN -->
+    <script src="https://unpkg.com/three@0.148.0/build/three.min.js"></script>
+
+    <!-- Initialize 3D Wireframe Spheres -->
+    <script>
+        // Wait for Three.js to load
+        function initSpheres() {
+            if (typeof THREE !== 'undefined') {
+                console.log('Three.js loaded, creating spheres...');
+
+                function createWireframeSphere(containerId, rotationSpeed = { x: 0.005, y: 0.01 }, sphereSize = 1.2, containerSize = 150, entranceDirection = 'none') {
+                    console.log('Creating sphere for:', containerId, 'with entrance:', entranceDirection);
+                    const container = document.getElementById(containerId);
+                    if (!container) {
+                        console.error('Container not found:', containerId);
+                        return;
+                    }
+                    console.log('Container found:', container);
+
+                    // Scene, Camera, Renderer
+                    const scene = new THREE.Scene();
+                    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+                    const renderer = new THREE.WebGLRenderer({
+                        antialias: true,
+                        alpha: true
+                    });
+
+                    renderer.setSize(containerSize, containerSize);
+                    renderer.setClearColor(0x000000, 0);
+                    container.appendChild(renderer.domElement);
+
+                    // Create wireframe sphere with glow effect
+                    const geometry = new THREE.SphereGeometry(sphereSize, 16, 16);
+
+                    // Main wireframe sphere
+                    const material = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        wireframe: true,
+                        opacity: 0.12,
+                        transparent: true
+                    });
+                    const sphere = new THREE.Mesh(geometry, material);
+                    scene.add(sphere);
+                    console.log('Main sphere added to scene');
+
+                    // Glow effect sphere (slightly larger, solid)
+                    const glowGeometry = new THREE.SphereGeometry(sphereSize * 1.05, 16, 16);
+                    const glowMaterial = new THREE.MeshBasicMaterial({
+                        color: 0xffffff,
+                        transparent: true,
+                        opacity: 0.03,
+                        side: THREE.BackSide
+                    });
+                    const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+                    scene.add(glowSphere);
+                    console.log('Glow sphere added to scene');
+
+                    camera.position.z = 3;
+
+                    // Set initial position for entrance animation using CSS transforms
+                    let initialTransformY = 0;
+                    if (entranceDirection === 'top') {
+                        initialTransformY = -200; // Start 200px above
+                        container.style.transform = `translateY(${initialTransformY}px)`;
+                        container.style.opacity = '0';
+                    } else if (entranceDirection === 'bottom') {
+                        initialTransformY = 200; // Start 200px below
+                        container.style.transform = `translateY(${initialTransformY}px)`;
+                        container.style.opacity = '0';
+                    }
+
+                    // Entrance animation variables
+                    let entranceProgress = entranceDirection === 'none' ? 1 : 0;
+                    const entranceSpeed = 0.02;
+                    const entranceDelay = entranceDirection === 'top' ? 2000 : 2500; // Stagger the entrances
+                    let animationStarted = false;
+
+                    // Start entrance animation after delay
+                    if (entranceDirection !== 'none') {
+                        setTimeout(() => {
+                            animationStarted = true;
+                            console.log('Starting entrance animation for:', containerId, 'direction:', entranceDirection);
+                        }, entranceDelay);
+                    } else {
+                        animationStarted = true;
+                    }
+
+                    // Simple smooth animation loop with entrance
+                    function animate() {
+                        requestAnimationFrame(animate);
+
+                        // Handle entrance animation using CSS transforms
+                        if (entranceDirection !== 'none' && entranceProgress < 1 && animationStarted) {
+                            entranceProgress += entranceSpeed;
+                            entranceProgress = Math.min(entranceProgress, 1);
+
+                            // Smooth easing for entrance
+                            const easedProgress = 1 - Math.pow(1 - entranceProgress, 3); // Ease out cubic
+                            const currentTransformY = initialTransformY * (1 - easedProgress);
+
+                            // Apply CSS transform to container
+                            container.style.transform = `translateY(${currentTransformY}px)`;
+                            container.style.opacity = easedProgress.toString();
+
+                            console.log('Animating:', containerId, 'progress:', easedProgress, 'translateY:', currentTransformY);
+                        }
+
+                        // Smooth rotation
+                        sphere.rotation.y += rotationSpeed.y;
+                        sphere.rotation.x += rotationSpeed.x;
+                        glowSphere.rotation.y += rotationSpeed.y;
+                        glowSphere.rotation.x += rotationSpeed.x;
+
+                        renderer.render(scene, camera);
+                    }
+
+                    animate();
+                    console.log('Sphere created in:', containerId, 'with entrance:', entranceDirection);
+                }
+
+
+
+                // Create wireframe spheres with entrance animations
+                console.log('Creating spheres...');
+                createWireframeSphere('sphere-1', { x: 0.002, y: 0.005 }, 1.2, 150, 'top'); // Enters from top
+                createWireframeSphere('sphere-2', { x: -0.002, y: -0.004 }, 1.6, 180, 'bottom'); // Enters from bottom
+                console.log('Spheres creation calls completed');
+            } else {
+                console.log('Three.js not loaded, retrying...');
+                setTimeout(initSpheres, 100);
+            }
+        }
+
+        // Start initialization after a short delay
+        setTimeout(initSpheres, 100);
+    </script>
+
+    <!-- Typing Animation Script -->
+    <script>
+        // Sliding Bar Reveal Animation
+        class SlidingRevealAnimation {
+            constructor() {
+                this.typingElement = document.getElementById('typing-text');
+                this.cursorElement = document.getElementById('typing-cursor');
+                this.overlay = document.getElementById('typing-overlay');
+                this.navbarLogo = document.getElementById('navbar-logo');
+
+                this.init();
+            }
+
+            init() {
+                // Force scroll to top for typing animation
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+
+                // Add typing-active class to body to hide content
+                document.body.classList.add('typing-active');
+
+                // Calculate text width for cursor positioning
+                this.calculateTextWidth();
+
+                // Start sliding animation after a short delay
+                setTimeout(() => {
+                    this.startSlideReveal();
+                }, 500);
+            }
+
+            calculateTextWidth() {
+                // Get the actual width of the text element
+                this.textWidth = this.typingElement.offsetWidth;
+                console.log('Text width:', this.textWidth);
+            }
+
+            startSlideReveal() {
+                // Start the reveal animation
+                this.typingElement.classList.add('reveal');
+
+                // Move cursor to the end of text
+                console.log('Moving cursor to:', this.textWidth + 'px');
+                this.cursorElement.style.left = this.textWidth + 'px';
+
+                // Wait for animation to complete, then transition
+                setTimeout(() => {
+                    this.transitionToNavbar();
+                }, 3000); // 2.5s animation + 0.5s pause
+            }
+
+            transitionToNavbar() {
+                // Hide cursor
+                this.cursorElement.style.opacity = '0';
+
+                // Show navbar first so we can get accurate positioning
+                document.body.classList.remove('typing-active');
+                document.body.classList.add('typing-complete');
+
+                // Wait a frame for navbar to be visible, then calculate positions
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { // Double RAF for better timing
+                        // Get positions after navbar is visible
+                        const navbarRect = this.navbarLogo.getBoundingClientRect();
+                        const textRect = this.typingElement.getBoundingClientRect();
+
+                        // Calculate viewport-relative positions
+                        const viewportWidth = window.innerWidth;
+                        const viewportHeight = window.innerHeight;
+
+                        // Get absolute positions
+                        const navbarAbsoluteX = navbarRect.left + window.scrollX;
+                        const navbarAbsoluteY = navbarRect.top + window.scrollY;
+                        const textAbsoluteX = textRect.left + window.scrollX;
+                        const textAbsoluteY = textRect.top + window.scrollY;
+
+                        // Calculate center-to-center movement
+                        const navbarCenterX = navbarAbsoluteX + (navbarRect.width / 2);
+                        const navbarCenterY = navbarAbsoluteY + (navbarRect.height / 2);
+                        const textCenterX = textAbsoluteX + (textRect.width / 2);
+                        const textCenterY = textAbsoluteY + (textRect.height / 2);
+
+                        const deltaX = navbarCenterX - textCenterX;
+                        const deltaY = navbarCenterY - textCenterY;
+
+                        console.log('Viewport:', viewportWidth, 'x', viewportHeight);
+                        console.log('Navbar rect:', navbarRect);
+                        console.log('Text rect:', textRect);
+                        console.log('Navbar center:', navbarCenterX, navbarCenterY);
+                        console.log('Text center:', textCenterX, textCenterY);
+                        console.log('Delta movement:', deltaX, deltaY);
+
+                        // Apply the transform with more precise positioning and style matching
+                        this.typingElement.style.transition = 'transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), font-size 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), font-weight 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), text-shadow 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                        this.typingElement.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+
+                        // Match navbar logo styling exactly (responsive)
+                        const screenWidth = window.innerWidth;
+                        let logoFontSize = '24px';
+
+                        if (screenWidth <= 320) {
+                            logoFontSize = '16px';
+                        } else if (screenWidth <= 480) {
+                            logoFontSize = '18px';
+                        } else if (screenWidth <= 768) {
+                            logoFontSize = '20px';
+                        } else if (screenWidth <= 1024) {
+                            logoFontSize = '22px';
+                        }
+
+                        this.typingElement.style.fontSize = logoFontSize;
+                        this.typingElement.style.fontWeight = '700';
+                        this.typingElement.style.color = '#f0f0f0';
+                        this.typingElement.style.textShadow = 'none';
+                        this.typingElement.style.letterSpacing = 'normal';
+
+                        // Fade out overlay background but keep text visible
+                        this.overlay.style.background = 'transparent';
+                        this.overlay.style.transition = 'background 0.8s ease-out';
+
+                        // Complete the transition
+                        setTimeout(() => {
+                            // Hide the animated text and show navbar logo
+                            this.typingElement.style.opacity = '0';
+                            this.navbarLogo.style.transition = 'opacity 0.3s ease-in';
+                            this.navbarLogo.style.opacity = '1';
+
+                            // Remove overlay from DOM after transition
+                            setTimeout(() => {
+                                this.overlay.style.display = 'none';
+                                // Clean up body classes
+                                document.body.classList.remove('typing-complete');
+                            }, 400);
+                        }, 1500); // Increased to match longer animation
+                    });
+                });
+            }
+        }
+
+        // Initialize sliding reveal animation when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new SlidingRevealAnimation();
+        });
+    </script>
 </body>
 
 </html>

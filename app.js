@@ -128,12 +128,62 @@ function initTextAnimation() {
     designerElement.style.transformStyle = 'preserve-3d';
     designerElement.style.perspective = '1000px';
 
-    // Start the animation loop
-    setInterval(changeText, 5000);
+    // Start the animation loop after Shouko animation completes (responsive timing)
+    const screenWidth = window.innerWidth;
+    let animationDelay = 5000; // Desktop timing
+
+    if (screenWidth <= 480) {
+        animationDelay = 3500; // Faster for mobile
+    } else if (screenWidth <= 768) {
+        animationDelay = 4000; // Medium for tablet
+    }
+
+    setTimeout(() => {
+        setInterval(changeText, 5000);
+    }, animationDelay);
 }
+
+// Force scroll to top on page load/refresh
+window.addEventListener('beforeunload', function() {
+    window.scrollTo(0, 0);
+});
+
+// Ensure page starts at top
+document.addEventListener('DOMContentLoaded', function() {
+    // Force scroll to top immediately
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    // Also set it after a short delay to override browser restoration
+    setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+    }, 10);
+});
 
 // Initialize text animation when DOM is loaded
 document.addEventListener('DOMContentLoaded', initTextAnimation);
+
+// Prevent language detection prompts
+document.addEventListener('DOMContentLoaded', function() {
+    // Set explicit language attributes
+    document.documentElement.setAttribute('lang', 'en');
+    document.documentElement.setAttribute('xml:lang', 'en');
+
+    // Disable automatic translation
+    const metaTranslate = document.createElement('meta');
+    metaTranslate.name = 'google';
+    metaTranslate.content = 'notranslate';
+    document.head.appendChild(metaTranslate);
+
+    // Add translate="no" to body
+    document.body.setAttribute('translate', 'no');
+    document.body.setAttribute('class', document.body.className + ' notranslate');
+
+    console.log('Language settings applied - English only');
+});
 
 // Mobile menu functionality
 const hamburgerMenu = document.querySelector('.hamburger-menu');
@@ -158,6 +208,35 @@ document.addEventListener('click', (e) => {
         navLinks.classList.remove('active');
         hamburgerMenu.classList.remove('active');
     }
+});
+
+// Prevent navbar links from being draggable
+document.addEventListener('DOMContentLoaded', function() {
+    const navbarLinks = document.querySelectorAll('.nav-links a, .logo');
+
+    navbarLinks.forEach(link => {
+        // Prevent drag start
+        link.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+
+        // Prevent selection on mousedown
+        link.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+        });
+
+        // Make links non-draggable
+        link.draggable = false;
+
+        // Prevent text selection
+        link.style.userSelect = 'none';
+        link.style.webkitUserSelect = 'none';
+        link.style.mozUserSelect = 'none';
+        link.style.msUserSelect = 'none';
+    });
+
+    console.log('Navbar drag prevention applied to', navbarLinks.length, 'links');
 });
 
 // Function to check if an element is in the viewport
