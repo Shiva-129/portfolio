@@ -243,12 +243,13 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Navbar drag prevention applied to', navbarLinks.length, 'links');
 });
 
-// Smart modal positioning for project cards
+// Smart modal positioning for project cards and GitHub link handling
 document.addEventListener('DOMContentLoaded', function() {
     const projectCards = document.querySelectorAll('.project-card');
 
     projectCards.forEach(card => {
         const modal = card.querySelector('.project-modal');
+        const githubLink = card.getAttribute('data-github');
 
         card.addEventListener('mouseenter', function() {
             if (modal) {
@@ -262,6 +263,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // - This ensures the modal content never exceeds viewport bounds
             }
         });
+
+        // Add click event for GitHub links
+        if (githubLink) {
+            card.addEventListener('click', function(e) {
+                // Open GitHub link when clicking anywhere on the card or modal
+                window.open(githubLink, '_blank');
+            });
+
+            // Add cursor pointer to indicate clickable
+            card.style.cursor = 'pointer';
+
+            // Also make modal clickable if it exists
+            if (modal) {
+                modal.style.cursor = 'pointer';
+            }
+        }
     });
 });
 
