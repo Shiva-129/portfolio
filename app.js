@@ -189,26 +189,30 @@ document.addEventListener('DOMContentLoaded', function() {
 const hamburgerMenu = document.querySelector('.hamburger-menu');
 const navLinks = document.querySelector('.nav-links');
 
-hamburgerMenu.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburgerMenu.classList.toggle('active');
-});
+if (hamburgerMenu && navLinks) {
+    hamburgerMenu.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        hamburgerMenu.classList.toggle('active');
+    });
+}
 
 // Close mobile menu when clicking a link
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        hamburgerMenu.classList.remove('active');
+if (hamburgerMenu && navLinks) {
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            hamburgerMenu.classList.remove('active');
+        });
     });
-});
 
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (!hamburgerMenu.contains(e.target) && !navLinks.contains(e.target)) {
-        navLinks.classList.remove('active');
-        hamburgerMenu.classList.remove('active');
-    }
-});
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!hamburgerMenu.contains(e.target) && !navLinks.contains(e.target)) {
+            navLinks.classList.remove('active');
+            hamburgerMenu.classList.remove('active');
+        }
+    });
+}
 
 // Prevent navbar links from being draggable
 document.addEventListener('DOMContentLoaded', function() {
@@ -239,6 +243,28 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Navbar drag prevention applied to', navbarLinks.length, 'links');
 });
 
+// Smart modal positioning for project cards
+document.addEventListener('DOMContentLoaded', function() {
+    const projectCards = document.querySelectorAll('.project-card');
+
+    projectCards.forEach(card => {
+        const modal = card.querySelector('.project-modal');
+
+        card.addEventListener('mouseenter', function() {
+            if (modal) {
+                // Reset positioning to ensure modal is always centered and fits in viewport
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+
+                // The modal will automatically fit within the screen due to:
+                // - Fixed positioning with padding: 20px on the modal container
+                // - max-height: calc(100vh - 80px) on modal-content
+                // - This ensures the modal content never exceeds viewport bounds
+            }
+        });
+    });
+});
+
 // Function to check if an element is in the viewport
 function isInViewport(element) {
     const rect = element.getBoundingClientRect();
@@ -259,6 +285,158 @@ window.addEventListener('scroll', () => {
             section.classList.add('visible');
         }
     });
+
+    // Handle floating navigation visibility
+    handleFloatingNav();
+});
+
+// Floating Navigation functionality
+function handleFloatingNav() {
+    const floatingNav = document.getElementById('floating-nav');
+    const navbar = document.querySelector('.sticky-navbar-wrapper');
+
+    if (!floatingNav || !navbar) return;
+
+    const navbarRect = navbar.getBoundingClientRect();
+    const scrollY = window.scrollY;
+
+    // Show floating nav when navbar is out of view (desktop only)
+    if (window.innerWidth > 768) {
+        if (navbarRect.bottom < 0 || scrollY > navbar.offsetHeight) {
+            floatingNav.classList.add('show');
+        } else {
+            floatingNav.classList.remove('show');
+        }
+    }
+}
+
+// Floating navigation drag functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const floatingNav = document.getElementById('floating-nav');
+    let isDragging = false;
+    let dragOffset = { x: 0, y: 0 };
+
+    if (floatingNav) {
+        floatingNav.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', stopDrag);
+
+        // Touch events for mobile (though nav is hidden on mobile)
+        floatingNav.addEventListener('touchstart', startDragTouch);
+        document.addEventListener('touchmove', dragTouch);
+        document.addEventListener('touchend', stopDrag);
+
+        function startDrag(e) {
+            // Don't drag if clicking on a link
+            if (e.target.tagName === 'A') return;
+
+            isDragging = true;
+            floatingNav.style.transition = 'none'; // Disable transitions during drag
+
+            const rect = floatingNav.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+
+            floatingNav.style.cursor = 'grabbing';
+            e.preventDefault();
+        }
+
+        function startDragTouch(e) {
+            if (e.target.tagName === 'A') return;
+
+            isDragging = true;
+            floatingNav.style.transition = 'none';
+
+            const rect = floatingNav.getBoundingClientRect();
+            const touch = e.touches[0];
+            dragOffset.x = touch.clientX - rect.left;
+            dragOffset.y = touch.clientY - rect.top;
+
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+
+            const x = e.clientX - dragOffset.x;
+            const y = e.clientY - dragOffset.y;
+
+            // Keep within viewport bounds
+            const maxX = window.innerWidth - floatingNav.offsetWidth;
+            const maxY = window.innerHeight - floatingNav.offsetHeight;
+
+            const boundedX = Math.max(0, Math.min(x, maxX));
+            const boundedY = Math.max(0, Math.min(y, maxY));
+
+            floatingNav.style.left = boundedX + 'px';
+            floatingNav.style.top = boundedY + 'px';
+            floatingNav.style.right = 'auto';
+            floatingNav.style.transform = 'none';
+
+            e.preventDefault();
+        }
+
+        function dragTouch(e) {
+            if (!isDragging) return;
+
+            const touch = e.touches[0];
+            const x = touch.clientX - dragOffset.x;
+            const y = touch.clientY - dragOffset.y;
+
+            const maxX = window.innerWidth - floatingNav.offsetWidth;
+            const maxY = window.innerHeight - floatingNav.offsetHeight;
+
+            const boundedX = Math.max(0, Math.min(x, maxX));
+            const boundedY = Math.max(0, Math.min(y, maxY));
+
+            floatingNav.style.left = boundedX + 'px';
+            floatingNav.style.top = boundedY + 'px';
+            floatingNav.style.right = 'auto';
+            floatingNav.style.transform = 'none';
+
+            e.preventDefault();
+        }
+
+        function stopDrag() {
+            if (!isDragging) return;
+
+            isDragging = false;
+            floatingNav.style.cursor = 'move';
+            floatingNav.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+        }
+    }
+});
+
+// Rotating word animation with slide effect
+document.addEventListener('DOMContentLoaded', function() {
+    const rotatingWord = document.querySelector('.rotating-word');
+    const words = ['DEVELOPER', 'DESIGNER', 'VIBE CODER'];
+    let currentIndex = 0;
+
+    function rotateWord() {
+        // Slide up and out
+        rotatingWord.style.transform = 'translateY(-20px)';
+        rotatingWord.style.opacity = '0';
+
+        setTimeout(() => {
+            // Change text while invisible
+            currentIndex = (currentIndex + 1) % words.length;
+            rotatingWord.textContent = words[currentIndex];
+
+            // Reset position below and slide up into view
+            rotatingWord.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                rotatingWord.style.transform = 'translateY(0)';
+                rotatingWord.style.opacity = '1';
+            }, 50);
+        }, 250);
+    }
+
+    // Start rotation after initial animations
+    setTimeout(() => {
+        setInterval(rotateWord, 2500);
+    }, 4000);
 });
 
 // Falling Letters Animation

@@ -177,8 +177,8 @@ html {
     /* Make html the main scrollable container */
     scroll-behavior: smooth;
     /* Smooth scrolling for anchor links */
-    scroll-padding-top: 120px;
-    /* Increased offset for sticky navbar */
+    scroll-padding-top: 20px;
+    /* Reduced offset since navbar is no longer sticky */
     -webkit-text-size-adjust: 100%;
     /* Prevent text scaling on mobile */
     -ms-text-size-adjust: 100%;
@@ -419,11 +419,10 @@ body {
 
 /* Navbar styles */
 .sticky-navbar-wrapper {
-    position: sticky;
-    /* Re-enabled sticky positioning */
-    top: 0;
+    position: static;
+    /* Changed from sticky to static positioning */
     width: 100%;
-    z-index: 1000;
+    z-index: 10030;
     padding: 10px 0 0 0;
     /* Add top padding to create space above the navbar */
     background-color: transparent;
@@ -525,8 +524,8 @@ nav {
     padding: 80px 20px;
     max-width: 1200px;
     margin: 0 auto;
-    scroll-margin-top: 70px;
-    /* Offset for sticky navbar */
+    scroll-margin-top: 20px;
+    /* Reduced offset since navbar is no longer sticky */
     animation: slideUpFromBottom 0.8s ease-out 0.3s forwards;
     opacity: 0;
     /* Start with opacity 0 */
@@ -615,6 +614,22 @@ nav {
     color: #00ffff;
 }
 
+/* Rotating word animation */
+.rotating-word {
+    font-weight: bold;
+    display: inline-block;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hover effect for rotating word to match other bio text */
+.rotating-word:hover {
+    transform: translateY(-8px);
+    text-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+    color: #00ffff;
+}
+
 .bio-text h1 span,
 .bio-text p span {
     display: inline-block;
@@ -642,7 +657,7 @@ nav {
     max-width: 1200px;
     margin: 0 auto;
     padding: 50px 20px;
-    scroll-margin-top: 70px;
+    scroll-margin-top: 20px;
     animation: slideUpFromBottom 0.8s ease-out 0.6s forwards;
     opacity: 0;
 }
@@ -700,7 +715,7 @@ nav {
     max-width: 80%;
     margin: 0 auto;
     padding: 50px 20px;
-    scroll-margin-top: 70px;
+    scroll-margin-top: 20px;
 }
 
 .projects-section h2 {
@@ -722,6 +737,18 @@ nav {
     margin-bottom: 25px;
     transition: all 0.3s ease;
     opacity: 0;
+    position: relative;
+    cursor: pointer;
+}
+
+.project-card:hover {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    transform: translateY(-5px);
+    z-index: 10005;
+    position: relative;
+    background-color: #2a2a2a !important;
+    border-color: #5a5a5a !important;
+    opacity: 1 !important;
 }
 
 .projects-section .project-card:nth-of-type(1) {
@@ -736,10 +763,154 @@ nav {
     animation: slideUpFromBottom 0.8s ease-out 1.8s forwards;
 }
 
-.project-card:hover {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    transform: translateY(-5px);
+/* Project Modal Styles */
+.project-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-sizing: border-box;
+    pointer-events: none;
+    padding: 20px;
 }
+
+.project-card:hover .project-modal {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Background blur effect with Figma specifications */
+.project-modal::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 10px;
+    z-index: 9998;
+    pointer-events: none;
+}
+
+
+
+
+
+/* Ensure modal content is interactive and above everything */
+.project-modal .modal-content {
+    pointer-events: auto;
+    position: relative;
+    z-index: 10010;
+}
+
+.modal-content {
+    background-color: #2a2a2a;
+    border-radius: 12px;
+    max-width: 380px;
+    width: 80%;
+    height: 420px;
+    max-height: calc(100vh - 80px);
+    min-height: 380px;
+    overflow-y: auto;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid #3a3a3a;
+    display: flex;
+    flex-direction: column;
+    z-index: 10000;
+    position: relative;
+}
+
+.modal-header {
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 22px;
+    color: #f0f0f0;
+    text-align: center;
+}
+
+.modal-body {
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    flex: 1;
+}
+
+.modal-image {
+    width: 100%;
+    height: 140px;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.modal-image::before {
+    content: 'Project Image';
+    color: #888;
+    font-size: 16px;
+    position: absolute;
+}
+
+.modal-description {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.modal-description p {
+    font-size: 12px;
+    line-height: 1.4;
+    color: #ccc;
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 5px;
+    justify-content: center;
+}
+
+.modal-tags .tag {
+    background-color: #0095ff;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 15px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+
 
 .project-card h3 {
     font-size: 24px;
@@ -774,8 +945,8 @@ nav {
     max-width: 80%;
     margin: 0 auto;
     padding: 50px 20px;
-    scroll-margin-top: 70px;
-    /* Offset for sticky navbar */
+    scroll-margin-top: 20px;
+    /* Reduced offset since navbar is no longer sticky */
 }
 
 .skills-section h2 {
@@ -883,8 +1054,8 @@ nav {
     max-width: 80%;
     margin: 0 auto;
     padding: 50px 20px;
-    scroll-margin-top: 70px;
-    /* Offset for sticky navbar */
+    scroll-margin-top: 20px;
+    /* Reduced offset since navbar is no longer sticky */
 }
 
 .learning-section h2 {
@@ -1071,6 +1242,13 @@ main {
         scroll-padding-top: 80px;
     }
 
+    /* Make navbar sticky for mobile */
+    .sticky-navbar-wrapper {
+        position: sticky;
+        top: 0;
+        z-index: 10030;
+    }
+
     /* Navbar styles for mobile */
     nav {
         max-width: 95%;
@@ -1085,7 +1263,7 @@ main {
     .nav-links {
         display: none;
         position: fixed;
-        top: 60px;
+        top: 70px;
         left: 0;
         width: 100%;
         background-color: rgba(43, 43, 43, 0.98);
@@ -1094,7 +1272,7 @@ main {
         flex-direction: column;
         align-items: center;
         gap: 25px;
-        z-index: 1001;
+        z-index: 9998;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
 
@@ -1132,6 +1310,8 @@ main {
         padding: 8px;
         border-radius: 4px;
         transition: background-color 0.3s ease;
+        z-index: 1003;
+        position: relative;
     }
 
     .hamburger-menu:hover {
@@ -1223,6 +1403,11 @@ main {
         max-width: 95%;
         padding: 40px 15px;
         margin: 0 auto;
+        scroll-margin-top: 70px; /* Account for sticky navbar on mobile */
+    }
+
+    .hero-section {
+        scroll-margin-top: 70px; /* Account for sticky navbar on mobile */
     }
 
     .about-me-section h2,
@@ -1254,6 +1439,34 @@ main {
         font-size: 14px;
         line-height: 1.5;
         margin-bottom: 15px;
+    }
+
+    /* Responsive Modal Styles */
+    .modal-content {
+        width: 85%;
+        height: 380px;
+        max-height: calc(100vh - 60px);
+    }
+
+    .modal-body {
+        padding: 15px;
+        gap: 12px;
+    }
+
+    .modal-image {
+        height: 120px;
+    }
+
+    .modal-header {
+        padding: 15px 15px 10px;
+    }
+
+    .modal-header h3 {
+        font-size: 18px;
+    }
+
+    .modal-description p {
+        font-size: 11px;
     }
 
     .tags {
@@ -1322,8 +1535,98 @@ main {
 }
 
 /* Hide hamburger menu on desktop */
-.hamburger-menu {
-    display: none;
+@media screen and (min-width: 769px) {
+    .hamburger-menu {
+        display: none;
+    }
+}
+
+/* Floating Navigation Box (Desktop Only) */
+.floating-nav-box {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10020;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    cursor: move;
+    user-select: none;
+}
+
+.floating-nav-box.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+
+.floating-nav-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    border-radius: 10px;
+    padding: 20px;
+    min-width: 150px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+}
+
+/* 6 dots in 3x2 matrix at the top of floating nav */
+.nav-dots {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 4px;
+    justify-content: center;
+    justify-items: center;
+    width: 30px;
+    margin: 0 auto 15px auto;
+    padding-bottom: 10px;
+}
+
+.nav-dots span {
+    width: 3px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    display: block;
+}
+
+.floating-nav-content a {
+    display: block;
+    color: #f0f0f0;
+    text-decoration: none;
+    padding: 12px 16px;
+    margin: 4px 0;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.floating-nav-content a:hover {
+    font-size: 19px;
+    color: #00ffff;
+    transform: translateY(-2px);
+    text-shadow: 0 0 15px rgba(0, 149, 255, 0.9),
+        0 0 25px rgba(0, 149, 255, 0.7),
+        0 0 35px rgba(0, 149, 255, 0.5);
+}
+
+/* Hide floating nav on mobile */
+@media screen and (max-width: 768px) {
+    .floating-nav-box {
+        display: none;
+    }
 }
 
 
@@ -1388,6 +1691,9 @@ footer {
 @media screen and (max-width: 480px) {
     .sticky-navbar-wrapper {
         padding: 5px 0 0 0;
+        position: sticky;
+        top: 0;
+        z-index: 10030;
     }
 
     nav {
@@ -1399,6 +1705,11 @@ footer {
 
     .logo {
         font-size: 18px;
+    }
+
+    /* Adjust mobile menu position for smaller screens */
+    .nav-links {
+        top: 55px; /* Adjust for smaller navbar height */
     }
 
     .hero-section {
@@ -1566,6 +1877,40 @@ footer {
     .learning-item p,
     .learning-card p {
         font-size: 13px;
+    }
+
+    /* Small Screen Modal Styles */
+    .modal-content {
+        width: 90%;
+        height: 360px;
+        max-height: calc(100vh - 40px);
+    }
+
+    .modal-body {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .modal-image {
+        height: 100px;
+    }
+
+    .modal-header {
+        padding: 12px 12px 8px;
+    }
+
+    .modal-header h3 {
+        font-size: 16px;
+    }
+
+    .modal-description p {
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .modal-tags .tag {
+        font-size: 9px;
+        padding: 3px 6px;
     }
 
     .skills-icons-container {
